@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wingo Predictor</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; margin: 0;
+  }
+  .container {
+    width: 95%; max-width: 480px;
+    background: rgba(255,255,255,0.08);
+    padding: 30px; border-radius: 25px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    backdrop-filter: blur(15px);
+    text-align: center;
+  }
+  h2 { font-size: 1.6rem; margin-bottom: 15px; color: #ffcc70; }
+  input, button {
+    width: 100%; padding: 14px; margin: 12px 0;
+    border: none; border-radius: 12px; font-size: 1rem; outline: none; transition: 0.3s;
+  }
+  input { background: rgba(255,255,255,0.15); color: white; }
+  input::placeholder { color: #ddd; }
+  button {
+    background: linear-gradient(135deg,#ff6a00,#ee0979);
+    color: white; font-weight: bold; cursor: pointer;
+    box-shadow: 0 0 15px rgba(255,80,120,0.6);
+  }
+  button:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,80,120,0.9); }
+  .hidden { display: none; }
+  .card {
+    background: rgba(255,255,255,0.12);
+    padding: 18px; border-radius: 16px;
+    margin: 14px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+  #history { text-align:left; margin-top:20px; max-height: 200px; overflow-y:auto; }
+  #history div {
+    background: rgba(255,255,255,0.07);
+    padding: 10px; border-radius: 10px;
+    margin-bottom: 8px; font-size: 0.9rem;
+  }
+  .small { color:#00e5ff; font-weight: bold; }
+  .big { color:#ff9800; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- LOGIN PAGE -->
+  <div id="loginPage">
+    <h2>VXM LOGIN</h2>
+    <input type="text" id="userKey" placeholder="Enter License Key">
+    <button onclick="checkKey()">Unlock</button>
+    <p id="loginMsg"></p>
+  </div>
+
+  <!-- PREDICTION PAGE -->
+  <div id="predictPage" class="hidden">
+    <h2>VXM VIP PREDICTOR</h2>
+    <div class="card">
+      <p><b>Period:</b> <span id="period">---</span></p>
+      <p><b>Time Left:</b> <span id="timer">00:00</span></p>
+    </div>
+    <div class="card">
+      <p id="prediction">H@CK OWNER :- @YOUKNOW_PBKS</p>
+      <button onclick="makePrediction()">✨ Predict Now</button>
+    </div>
+    <div id="history">
+      <h3>📜 History</h3>
+      <div id="historyList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // -------- LOGIN ----------
+  function checkKey(){
+    let key = document.getElementById("userKey").value.trim();
+    // For testing, let's allow any key
+    if(key){
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("predictPage").classList.remove("hidden");
+    } else {
+      document.getElementById("loginMsg").innerText = "❌ Invalid or Expired Key";
+    }
+  }
+
+  // -------- PERIOD + TIMER ----------
+  function updatePeriodAndTimer(){
+    let now = new Date();
+    let seconds = now.getUTCSeconds();
+    let remaining = 60 - seconds;
+    let minutes = now.getUTCMinutes();
+    let totalMinutes = now.getUTCHours() * 60 + minutes;
+    let datePart = now.toISOString().slice(0,10).replace(/-/g,"");
+    let period = datePart + "1000" + (10001 + totalMinutes);
+    document.getElementById("period").innerText = period;
+    document.getElementById("timer").innerText = "00:" + String(remaining).padStart(2, "0");
+  }
+  setInterval(updatePeriodAndTimer, 1000);
+  updatePeriodAndTimer();
+
+  // -------- PREDICTION ----------
+  let lastPeriod = "";
+  function makePrediction(){
+    let period = document.getElementById("period").innerText;
+    if(period === lastPeriod){
+      alert("⏳ अगला पीरियड आने दो भाई");
+      return;
+    }
+    lastPeriod = period;
+
+    let num = Math.floor(Math.random() * 10);
+
+    // SMALL / BIG logic
+    let type;
+    if(num <= 4){
+      type = "<span class='big'>BIG</span>";
+    } else {
+      type = "<span class='small'>SMALL</span>";
+    }
+
+    let pred = `Number: ${num} → ${type}`;
+    document.getElementById("prediction").innerHTML = pred;
+
+    let h = document.getElementById("historyList");
+    h.innerHTML = `<div>Period: ${period} | ${pred}</div>` + h.innerHTML;
+  }
+</script>
+</body>
+</html>
